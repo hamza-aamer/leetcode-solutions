@@ -30,41 +30,28 @@ num does not contain any leading zeros except for the zero itself.
 1 <= k <= 104*/
 
 #include <vector>
-long long int pow(int a,long long int b){
-    long long int temp;
-    for(int x=0;x<int;x++){
-        temp*=b;
-    }
-    return temp;
-}
+#include <cmath>
 class Solution {
 public:
     vector<int> addToArrayForm(vector<int>& num, int k) {
-        vector<int> bruh;
-        long long int numb=0;
-        for(int x=0;x<num.size();x++){
-            if(num[x]<=9 && num[x]>=0){
-                numb*=10;
-                numb+=num[x];
-            }
-        }
-        numb+=k;
-        long long int temp=numb;
+        vector<int> result;
+        long long int temp=k;
         int noc=0;
-        while(1){
-            if(temp==0) break;
-            temp/=10;
-            noc++;
-        }
-        temp=0;
-        for(int x=0;x<noc;x++){
-            temp=(numb/pow(10,noc-1-x)) % 10;
-            bruh.push_back(temp);
+
+        for(int x=num.size()-1;x>=0 || k!=0;--x){
+            if(x<0){
+                num.insert(num.begin(),0);
+                x++;
+            }
+            num[x]=num[x]+k;
+            k=num[x]/10;
+            num[x]%=10;
+            result.insert(result.begin(),num[x]);
         }
 
-        for(int x=0;x<4;x++){
-            cout<<bruh[x]<<endl;
+        for(int x=0;x<result.size();x++){
+            cout<<result[x]<<endl;
         }
-        return bruh;
+        return result;
     }
 };
