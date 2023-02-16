@@ -25,145 +25,50 @@ nums2.length == n
 1 <= m + n <= 2000
 -106 <= nums1[i], nums2[i] <= 106*/
 
-class Solution {
-public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        if (nums1.size()+nums2.size()==1){
-            if(nums1.size()!=1)
-            return nums1[0];
-            else return nums2[0];
-        }
-        int apos = 0;
-        int bpos = 0;
-        bool flag = 0;
-        for (int x = 0; x < nums1.size() + nums2.size(); x++) {
-            if (apos <= nums1.size()-1 && nums1[apos] < nums2[bpos]) {
-                //apos++;
-                if (x+1 >=( nums1.size() + nums2.size()) / 2) {
-                     //cout<<nums1.size()+nums2.size();
-                     if((nums1.size()+nums2.size())%2==0){
-                         //apos++;
-                         if (apos + 1 == nums1.size()) {
-                             bpos++;
-                             return ((double)nums1[apos-1] + nums2[bpos]) / 2;
-                         }
-                         if (nums1[apos + 1] > nums2[bpos]) {
-                             bpos++;
-                             return ((double)nums1[apos-1] + nums2[bpos]) / 2;
-                         }
-                         return ((double)nums1[apos]+nums1[apos+1])/2;
-                     }
-                     if (flag == 1) return nums1[apos];
-                    apos++;
-                     if (nums1[apos] > nums2[bpos]) {
-                         flag = 1;
-                         continue;
-                     }
-                    return nums1[apos];
-                }
-                //cout << nums1[apos-1];
-                apos++;
-                continue;
-            }
-            if (bpos <= nums2.size()-1 && nums2[bpos] < nums1[apos]) {
-                if (x+1 >= (nums1.size() + nums2.size()) / 2) {
-                    
-                    if ((nums1.size() + nums2.size()) % 2 == 0) {
-                        
-                        if (bpos + 1 == nums2.size()) {
-                            bpos++;
-                            return ((double)nums1[apos] + nums2[bpos-1]) / 2;
-                        }
-                        if (nums2[bpos + 1] > nums1[apos]) {
-                            bpos++;
-                            return ((double)nums1[apos] + nums2[bpos-1]) / 2;
-                        }
-                        return ((double)nums1[apos] + nums1[apos + 1]) / 2;
-                    }
-                    if (flag == 1) return nums2[bpos];
-                    bpos++;
-                    if (nums1[apos] < nums2[bpos]) {
-                        flag = 1;
-                        continue;
-                    }
-                    return nums2[bpos];
-                }
-                //cout << nums2[bpos-1];
-                bpos++;
-                continue;
-            }
-        }
-        return 0;
-    }
-};
+   double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 
+   vector<int> merged;
+   int apos = 0, bpos = 0;
+   int postofind = ceil((nums1.size() + nums2.size() + 1) / 2);
+   bool even = ((nums1.size() + nums2.size()) % 2 == 0);
+   bool odd = !even;
+   int lasta = INT_MIN;
+   int lastb = INT_MIN;
+   if (nums1.size() > 0)  lasta = nums1[0];
+   if (nums2.size() > 0)  lastb = nums2[0];
+   int x;
+   for (x = 0; x < nums1.size() + nums2.size() || postofind+2!=x; x++) {
+       if (postofind+1 == x) {
+           if (odd) {
+               return merged[x-2];
+           }
+           if (even) {
+               return ((double)merged[x-1] + (double)merged[x-2]) / 2;
+           }
+       }
+       if (nums1.size() > apos) {
+           if (nums1[apos] <= lastb || nums2.size() <= bpos) {
+               merged.push_back(nums1[apos]);
+               lasta = nums1[apos];
+               apos++;
+               if (nums1.size() > apos) {
+                   lasta = nums1[apos];
+               }
+               continue;
+           }
+       }
+       if (nums2.size() > bpos) {
+           if (nums2[bpos] <= lasta || nums1.size()<=apos) {
+               merged.push_back(nums2[bpos]);
+               lastb = nums2[bpos];
+               bpos++;
+               if (nums2.size() > bpos) {
+                   lastb = nums2[bpos];
+               }
+               continue;
+           }
+       }
+   }
 
-//attempt 2:
-    if (nums1.size() == 1 && nums2.size() == 0) return nums1[0];
-    if (nums2.size() == 1 && nums1.size() == 0) return nums2[0];
-    if (nums1.size() <= 1 || nums2.size() <= 1) {
-        if (nums1.size() == 0 && nums2.size() >= 1) {
-            return nums2[nums1.size() + nums2.size() / 2];
-        }
-    }
-    int apos = 0;
-    int bpos = 0;
-    bool flag = 0;
-    for (int x = 0; x < nums1.size() + nums2.size(); x++) {
-        if (apos <= nums1.size() - 1 && nums1[apos] < nums2[bpos]) {
-            //apos++;
-            if (x + 1 >= (nums1.size() + nums2.size()) / 2) {
-                //cout<<nums1.size()+nums2.size();
-                if ((nums1.size() + nums2.size()) % 2 == 0) {
-                    //apos++;
-                    if (apos + 1 == nums1.size()) {
-                        bpos++;
-                        return ((double)nums1[apos - 1] + nums2[bpos]) / 2;
-                    }
-                    if (nums1[apos + 1] > nums2[bpos]) {
-                        bpos++;
-                        return ((double)nums1[apos - 1] + nums2[bpos]) / 2;
-                    }
-                    return ((double)nums1[apos] + nums1[apos + 1]) / 2;
-                }
-                if (flag == 1) return nums1[apos];
-                apos++;
-                if (nums1[apos] > nums2[bpos]) {
-                    flag = 1;
-                    continue;
-                }
-                return nums1[apos];
-            }
-            //cout << nums1[apos-1];
-            apos++;
-            continue;
-        }
-        if (bpos <= nums2.size() - 1 && nums2[bpos] < nums1[apos]) {
-            if (x + 1 >= (nums1.size() + nums2.size()) / 2) {
-
-                if ((nums1.size() + nums2.size()) % 2 == 0) {
-
-                    if (bpos + 1 == nums2.size()) {
-                        bpos++;
-                        return ((double)nums1[apos] + nums2[bpos - 1]) / 2;
-                    }
-                    if (nums2[bpos + 1] > nums1[apos]) {
-                        bpos++;
-                        return ((double)nums1[apos] + nums2[bpos - 1]) / 2;
-                    }
-                    return ((double)nums1[apos] + nums1[apos + 1]) / 2;
-                }
-                if (flag == 1) return nums2[bpos];
-                bpos++;
-                if (nums1[apos] < nums2[bpos]) {
-                    flag = 1;
-                    continue;
-                }
-                return nums2[bpos];
-            }
-            //cout << nums2[bpos-1];
-            bpos++;
-            continue;
-        }
-    }
-    return 0;
+   return 0;
+ }
