@@ -96,3 +96,74 @@ public:
         return 0;
     }
 };
+
+
+//attempt 2:
+    if (nums1.size() == 1 && nums2.size() == 0) return nums1[0];
+    if (nums2.size() == 1 && nums1.size() == 0) return nums2[0];
+    if (nums1.size() <= 1 || nums2.size() <= 1) {
+        if (nums1.size() == 0 && nums2.size() >= 1) {
+            return nums2[nums1.size() + nums2.size() / 2];
+        }
+    }
+    int apos = 0;
+    int bpos = 0;
+    bool flag = 0;
+    for (int x = 0; x < nums1.size() + nums2.size(); x++) {
+        if (apos <= nums1.size() - 1 && nums1[apos] < nums2[bpos]) {
+            //apos++;
+            if (x + 1 >= (nums1.size() + nums2.size()) / 2) {
+                //cout<<nums1.size()+nums2.size();
+                if ((nums1.size() + nums2.size()) % 2 == 0) {
+                    //apos++;
+                    if (apos + 1 == nums1.size()) {
+                        bpos++;
+                        return ((double)nums1[apos - 1] + nums2[bpos]) / 2;
+                    }
+                    if (nums1[apos + 1] > nums2[bpos]) {
+                        bpos++;
+                        return ((double)nums1[apos - 1] + nums2[bpos]) / 2;
+                    }
+                    return ((double)nums1[apos] + nums1[apos + 1]) / 2;
+                }
+                if (flag == 1) return nums1[apos];
+                apos++;
+                if (nums1[apos] > nums2[bpos]) {
+                    flag = 1;
+                    continue;
+                }
+                return nums1[apos];
+            }
+            //cout << nums1[apos-1];
+            apos++;
+            continue;
+        }
+        if (bpos <= nums2.size() - 1 && nums2[bpos] < nums1[apos]) {
+            if (x + 1 >= (nums1.size() + nums2.size()) / 2) {
+
+                if ((nums1.size() + nums2.size()) % 2 == 0) {
+
+                    if (bpos + 1 == nums2.size()) {
+                        bpos++;
+                        return ((double)nums1[apos] + nums2[bpos - 1]) / 2;
+                    }
+                    if (nums2[bpos + 1] > nums1[apos]) {
+                        bpos++;
+                        return ((double)nums1[apos] + nums2[bpos - 1]) / 2;
+                    }
+                    return ((double)nums1[apos] + nums1[apos + 1]) / 2;
+                }
+                if (flag == 1) return nums2[bpos];
+                bpos++;
+                if (nums1[apos] < nums2[bpos]) {
+                    flag = 1;
+                    continue;
+                }
+                return nums2[bpos];
+            }
+            //cout << nums2[bpos-1];
+            bpos++;
+            continue;
+        }
+    }
+    return 0;
